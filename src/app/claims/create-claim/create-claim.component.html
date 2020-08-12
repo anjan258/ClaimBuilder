@@ -1,1 +1,94 @@
 <h3>Claim Setup</h3>
+<form [formGroup]="addClaimForm" (ngSubmit)="onAddClaimFormSubmit()">
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="invoiceDate">InvoiceDate</label>
+        <input type="text" class="form-control" id="invoiceDate" formControlName="invoiceDate"
+         bsDatepicker [bsConfig]="datePickerConfig" placement="right">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="purchaseOrderNumber">Purchase Order Number</label>
+        <input type="text" class="form-control" id="purchaseOrderNumber" formControlName="purchaseOrderNumber">
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="invoiceNumber">Invoice Number</label>
+        <input type="text" class="form-control" id="invoiceNumber" formControlName="invoiceNumber">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="companyName">Company Name</label>
+        <input type="text" class="form-control" id="companyName" formControlName="companyName">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="street1">Street - 1</label>
+        <input type="text" class="form-control" id="street1" formControlName="street1">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="street2">Street - 2</label>
+        <input type="text" class="form-control" id="street2" formControlName="street2">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="city">City</label>
+        <input type="text" class="form-control" id="city" formControlName="city">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="StateProvince">State Province</label>
+        <select class="form-control" class="form-control" formControlName="stateProvince">
+          <option [selected]>Select State</option>
+          <option *ngFor="let s of states" [ngValue]="s.id">
+             {{ s.name }}  
+            </option>
+          </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="postalCode">Postal/Zip Code</label>
+        <input type="text" class="form-control" id="postalCode" formControlName="postalCode">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="country">Country</label>
+        <select class="form-control" class="form-control" formControlName="country">
+        <option [selected]>Select Country</option>
+        <option *ngFor="let c of countries" [ngValue]="c.id">
+           {{ c.name }}  
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="contactPerson">Contact Person</label>
+        <input type="text" class="form-control" id="contactPerson" formControlName="contactPerson">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="endUserInvoiceTotalAmount">End User Invoice Total Amount</label>
+        <input type="text" class="form-control" id="endUserInvoiceTotalAmount" formControlName="endUserInvoiceTotalAmount">
+      </div>
+      <div class="form-group col-md-6">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="!addClaimForm.valid">Create Claim</button>
+  </form>

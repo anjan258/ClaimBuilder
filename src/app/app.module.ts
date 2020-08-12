@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SiteFrameworkModule } from './site-framework/site-framework.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { SiteFrameworkModule } from './site-framework/site-framework.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SiteFrameworkModule
+    SiteFrameworkModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
