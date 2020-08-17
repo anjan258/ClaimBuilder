@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { FormControl, FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CanComponentDeactivate } from 'src/app/shared/unsavedchanges.guard';
+import { ClaimsService } from '../claims.service';
+import { Claim } from '../claim';
+import { CatalogItem  } from '../catalog-item';
 
 @Component({
   selector: 'app-create-claim',
@@ -10,8 +13,12 @@ import { CanComponentDeactivate } from 'src/app/shared/unsavedchanges.guard';
 })
 export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
 
+  claim: Claim;
+  catalogItem: CatalogItem;
   addClaimForm: FormGroup;
   datePickerConfig: Partial<BsDatepickerConfig>;
+  listSkus: any[];
+  showHideDistributor: boolean = false;
 
   countries: any[] = [
     { id: 1, name: 'Canada' },
@@ -30,6 +37,17 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
     { id: 9, name: 'Ohio' },
   ];
 
+  distributorsList: Array<any> = [
+    { name: 'Arrow', value: 0 },
+    { name: 'D&H', value: 6 },
+    { name: 'Ingram Micro', value: 1 },
+    { name: 'ScanSource', value: 2 },
+    { name: 'Synnex', value: 3 },
+    { name: 'Tech Data', value: 4 },
+    { name: 'HPE', value: 5 },
+    { name: 'Other Distributor', value: 7 }
+  ];
+
   canDeactivate(): boolean {
     if (this.addClaimForm.dirty || this.addClaimForm.touched) {
       return window.confirm('Are you sure you want to discard changes.?');
@@ -37,7 +55,7 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
     return true;
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private claimService: ClaimsService) {
 
     this.datePickerConfig = Object.assign({},
       {
@@ -55,6 +73,7 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
       invoiceNumbers: this.fb.array([
        this.initInvoiceNumberFormGroup()
       ]),
+      distributors: this.fb.array([]),
       companyName: ['', Validators.required],
       street1: ['', Validators.required],
       street2: [''],
@@ -64,9 +83,15 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
       country: ['Select Country', Validators.required],
       contactPerson: [''],
       phoneNumber: ['', [Validators.pattern('^[0-9]*$'), Validators.required]],
-      endUserInvoiceTotalAmount: ['', Validators.required]
+      endUserInvoiceTotalAmount: ['', Validators.required],
+      otherDistributor: ['']
 
     });
+
+    this.claimService.getAllSkus().subscribe(data =>
+      {
+        this.listSkus =  data;
+      });
   }
 
   getValidationError(grp: FormGroup = this.addClaimForm): void {
@@ -79,8 +104,6 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
 
         for (const errorKey in abstractControl.errors) {
           if (errorKey) {
-            // tslint:disable-next-line: no-debugger
-            debugger;
           }
         }
       }
@@ -99,7 +122,17 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
     });
   }
 
-  onAddClaimFormSubmit(): void {console.log(this.addClaimForm.value); }
+  onAddClaimFormSubmit(): void {
+
+    this.claim = this.addClaimForm.value;
+    this.claim.UserId = 322534;
+    this.claim.DistributorIds = [1, 2];
+    this.claim.CatalogItem = { Points: 44, SerialNumber: '2111111', SkuId: 21348 };
+    this.claimService.createClaim(this.claim).subscribe(
+    () => alert('claim created successfully'),
+    (err) => console.log(err)
+    );
+  }
 
   addNewInvoiceNumber(): void{
     this.getFormItems().push(this.initInvoiceNumberFormGroup());
@@ -110,6 +143,31 @@ export class CreateClaimComponent implements OnInit, CanComponentDeactivate {
     invoiceFormArray.removeAt(index);
     invoiceFormArray.markAsTouched();
     invoiceFormArray.markAsDirty();
+  }
+
+  onCheckboxChange(e): void{
+    const distributorsArray: FormArray = this.addClaimForm.get('distributors') as FormArray;
+
+    if (e.target.value === '7' && e.target.checked)
+    {
+      this.showHideDistributor = true;
+    }
+    else{
+      this.showHideDistributor = false;
+    }
+
+    if (e.target.checked) {
+      distributorsArray.push(new FormControl(e.target.value));
+    } else {
+      let i = 0;
+      distributorsArray.controls.forEach((item: FormControl) => {
+        if (item.value === e.target.value) {
+          distributorsArray.removeAt(i);
+          return;
+        }
+        i++;
+      });
+    }
   }
 
 }

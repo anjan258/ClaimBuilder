@@ -105,6 +105,39 @@
       </div>
     </div>
 
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label>Select Distributor</label>
+        <div *ngFor="let d of distributorsList; let i=index">
+          <label>
+            <input type="checkbox" [value]="d.value" (change)="onCheckboxChange($event)" />
+            {{d.name}}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row" *ngIf="showHideDistributor">
+      <div class="form-group col-md-6">
+          <input type="text" class="form-control" id="otherDistributor" formControlName="otherDistributor">
+      </div>
+      <div class="form-group col-md-6">
+    </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <h4>Select sku</h4>
+        <div *ngIf="listSkus; else emptySkuList"></div>
+        <div *ngFor="let s of listSkus">
+        {{s.sku}}
+         <a href="#" >Select</a>
+        </div>
+        <ng-template #emptySkuList>No Sku's available.</ng-template>
+      </div>
+    </div>
+
+
     <button type="submit" class="btn btn-success" [disabled]="!addClaimForm.valid">Create Claim</button>
   </form>
 

@@ -1,0 +1,12 @@
+<h4>Sku's List</h4>
+
+<div class="form-group">
+    <input type="text" class="form-control" placeholder="Search sku" width="300px" [(ngModel)]="searchText" (input)="Search()" />
+</div>
+<div *ngIf="listSkus; else emptySkuList">
+    <div  *ngFor="let s of listSkus">
+        {{s.sku}}
+</div>
+</div>
+
+<ng-template #emptySkuList>No Sku's available.</ng-template>

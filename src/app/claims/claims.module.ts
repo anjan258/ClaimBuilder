@@ -6,10 +6,11 @@ import { ClaimsRoutingModule } from './claims-routing.module';
 import { ClaimsComponent } from './claims.component';
 import { CreateClaimComponent } from './create-claim/create-claim.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ListSkusComponent } from './list-skus/list-skus.component';
 
 
 @NgModule({
-  declarations: [ClaimsComponent, CreateClaimComponent],
+  declarations: [ClaimsComponent, CreateClaimComponent, ListSkusComponent],
   imports: [
     CommonModule,
     FormsModule,
